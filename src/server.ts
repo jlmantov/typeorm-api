@@ -1,9 +1,9 @@
 import * as express from "express"
 import * as bodyParser from "body-parser"
 import { Request, Response } from "express"
-import { AppDataSource } from "./data-source"
+import { AppDataSource } from "./orm/datasource"
 import { Routes } from "./routes"
-import { User } from "./entity/User"
+import { User } from "./orm/entity/User"
 
 AppDataSource.initialize().then(async () => {
 

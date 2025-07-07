@@ -1,6 +1,6 @@
-import { AppDataSource } from "../data-source"
+import { AppDataSource } from "../orm/datasource"
 import { NextFunction, Request, Response } from "express"
-import { User } from "../entity/User"
+import { User } from "../orm/entity/User"
 
 export class UserController {
 

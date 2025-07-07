@@ -214,3 +214,66 @@ $ git branch -M main
 $ git remote add origin https://github.com/<MyProfile>/typeorm-api.git
 $ git push -u origin main
 ```
+
+### Project adjustments
+
+#### Rename `index.ts` to `server.ts`
+<code style="color : greenyellow">➜</code> <code style="color : aqua">typeorm-api</code> ```mv src/index.ts src/server.ts```
+
+... and make package.json reflect that change
+```
+{
+   ...
+   "scripts": {
+      "start": "ts-node src/server.ts",
+      "typeorm": "typeorm-ts-node-commonjs"
+   },
+   ...
+}
+```
+
+#### Collect ORM releated stuff in `src/orm/`
+
+These things get bloated quickly. Looking forward, the aim is a folder structure with room for growth (focusing on ORM right now) - going in this direction
+```
+src/
+    controllers/
+    graphql/
+    orm/
+        entity/
+        migration/
+        subscriber/
+        datasource.ts
+    routes/
+    utils/
+    server.ts
+```
+
+Rearranging the structure ...
+
+<code style="color : greenyellow">➜</code> <code style="color : aqua">typeorm-api</code> ```mkdir src/orm```
+
+<code style="color : greenyellow">➜</code> <code style="color : aqua">typeorm-api</code> ```mv src/entity src/orm/entity```
+
+<code style="color : greenyellow">➜</code> <code style="color : aqua">typeorm-api</code> ```mv src/migration src/orm/migration```
+
+<code style="color : greenyellow">➜</code> <code style="color : aqua">typeorm-api</code> ```mv src/data-source.ts src/orm/datasource.ts```
+
+#### Fix the imports after rearrangement
+
+`server.ts`
+```
+ :
+import { AppDataSource } from "./orm/datasource"
+import { User } from "./orm/entity/User"
+ :
+```
+
+`UserController.ts`
+```
+ :
+import { AppDataSource } from "../orm/datasource"
+import { User } from "../orm/entity/User"
+ :
+```
+
