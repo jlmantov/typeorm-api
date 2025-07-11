@@ -3,20 +3,31 @@
    "version": "0.0.1",
    "description": "Awesome project developed with TypeORM.",
    "type": "commonjs",
+   "scripts": {
+      "-- Dev ------": "synchronize = true  --  Migration-files are created here",
+      "dev:start": "dotenvx run -f .env.development -- ts-node src/server.ts",
+      "dev:typeorm": "dotenvx run -f .env.development -- typeorm-ts-node-commonjs",
+      "dev:migration:run": "dotenvx run -f .env.development -- typeorm-ts-node-commonjs migration:run -d src/orm/datasource.ts",
+      "dev:migration:revert": "dotenvx run -f .env.development -- typeorm-ts-node-commonjs migration:revert -d src/orm/datasource.ts",
+
+      "-- Test -----": "synchronize = false  --  using migration here (this part is tested too)",
+      "test:start": "dotenvx run -f .env.test -- ts-node src/server.ts",
+      "test:typeorm": "dotenvx run -f .env.test -- typeorm-ts-node-commonjs",
+      "test:migration:run": "dotenvx run -f .env.test -- typeorm-ts-node-commonjs migration:run -d src/orm/datasource.ts",
+      "test:migration:revert": "dotenvx run -f .env.test -- typeorm-ts-node-commonjs migration:revert -d src/orm/datasource.ts"
+   },
    "devDependencies": {
       "@types/node": "^22.13.10",
       "ts-node": "^10.9.2",
       "typescript": "^5.8.2"
    },
    "dependencies": {
-      "reflect-metadata": "^0.2.2",
-      "typeorm": "0.3.25",
-      "mysql2": "^3.14.0",
+      "@dotenvx/dotenvx": "^1.45.2",
+      "body-parser": "^1.20.3",
       "express": "^4.21.2",
-      "body-parser": "^1.20.3"
-   },
-   "scripts": {
-      "start": "ts-node src/server.ts",
-      "typeorm": "typeorm-ts-node-commonjs"
+      "mysql2": "^3.14.0",
+      "path": "^0.12.7",
+      "reflect-metadata": "^0.2.2",
+      "typeorm": "0.3.25"
    }
 }

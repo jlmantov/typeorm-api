@@ -1,48 +1,53 @@
 # creating a basic TypeORM project with migrations
 
 Based on TypeORM Docs - and quickly expanding from there:
- * [TypeORM's Quick Start](https://typeorm.io/docs/getting-started/#quick-start) 
- * [Example using TypeORM with Express](https://typeorm.io/docs/guides/example-with-express)
+
+* [TypeORM's Quick Start](https://typeorm.io/docs/getting-started/#quick-start)
+* [Example using TypeORM with Express](https://typeorm.io/docs/guides/example-with-express)
 
 ## Preconditions
 
- * npm, NodeJS, TypeScript etc. installed
- * MySQL is available and running on port 3306
- * an application (DB) user `test` is granted access to a `test` database with CRUD privileges etc.
+* npm, NodeJS, TypeScript etc. installed
+* MySQL is available and running on port 3306
+* an application (DB) user `test` is granted access to a `test` database with CRUD privileges etc.
 
 ### npm, NodeJS and TypeScript is installed
 
 **NB** This is important because migration uses typeorm-cli - which might work with different environment settings than executing `npm run` commands.
 
 #### Node Package Manager
-<code style="color : greenyellow">➜</code> <code style="color : aqua">dev</code> ```npm -v ```
 
-```
+(dev) $ `npm -v`
+
+```text
 10.9.2
 ```
 
 #### Node Package Runner
-<code style="color : greenyellow">➜</code> <code style="color : aqua">dev</code> ```npx -v ```
 
-```
+(dev) $ `npx -v`
+
+```text
 10.9.2
 ```
 
 #### NodeJS
-<code style="color : greenyellow">➜</code> <code style="color : aqua">dev</code> ```node -v ```
-```
+
+(dev) $ `node -v`
+
+```text
 v22.15.0
 ```
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">dev</code> ```which node ```
+(dev) $ `which node`
 
-```
+```text
 /home/jlm/.nvm/versions/node/v22.15.0/bin/node
 ```
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">dev</code> ```ls -la /home/jlm/.nvm/versions/node/v22.15.0/bin ```
+(dev) $ `ls -la /home/jlm/.nvm/versions/node/v22.15.0/bin`
 
-```
+```text
 total 118396
 lrwxrwxrwx 1 jlm jlm        45 Apr 22 22:58 corepack -> ../lib/node_modules/corepack/dist/corepack.js
 -rwxr-xr-x 1 jlm jlm 121236344 Apr 22 22:58 node
@@ -50,41 +55,42 @@ lrwxrwxrwx 1 jlm jlm        38 Apr 22 22:58 npm -> ../lib/node_modules/npm/bin/n
 lrwxrwxrwx 1 jlm jlm        38 Apr 22 22:58 npx -> ../lib/node_modules/npm/bin/npx-cli.js
 lrwxrwxrwx 1 jlm jlm        41 Jun 23 20:28 react-devtools -> ../lib/node_modules/react-devtools/bin.js
 ```
+
 **Notice** `tsc` and `ts-node` not avilable here yet - which is confirmed by this:
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">dev</code> ```tsc -v ```
+(dev) $ `tsc -v`
 
-```
+```text
 zsh: command not found: tsc
 ```
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">dev</code> ```npm install -g typescript ts-node ```
+(dev) $ `npm install -g typescript ts-node`
 
-```
+```text
 added 20 packages in 3s
 ```
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">dev</code> ```tsc -v ```
+(dev) $ `tsc -v`
 
-```
+```text
 Version 5.8.3
 ```
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">dev</code> ```ts-node -v ```
+(dev) $ `ts-node -v`
 
-```
+```text
 v10.9.2
 ```
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">dev</code> ```which tsc ```
+(dev) $ `which tsc`
 
-```
+```bash
 /home/jlm/.nvm/versions/node/v22.15.0/bin/tsc
 ```
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">dev</code> ```ls -l /home/jlm/.nvm/versions/node/v22.15.0/bin/ ```
+(dev) $ `ls -l /home/jlm/.nvm/versions/node/v22.15.0/bin/`
 
-```
+```text
 total 118396
 lrwxrwxrwx 1 jlm jlm        45 Apr 22 22:58 corepack -> ../lib/node_modules/corepack/dist/corepack.js
 -rwxr-xr-x 1 jlm jlm 121236344 Apr 22 22:58 node
@@ -101,12 +107,11 @@ lrwxrwxrwx 1 jlm jlm        57 Jul  7 13:17 ts-script -> ../lib/node_modules/ts-
 lrwxrwxrwx 1 jlm jlm        43 Jul  7 13:17 tsserver -> ../lib/node_modules/typescript/bin/tsserver
 ```
 
-
 ### MySQL is available (port 3306) and user `test` is granted access to DB `test`
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">dev</code> ```docker exec -it sandbox mysql -u test -p```
+(dev) $ `docker exec -it sandbox mysql -u test -p`
 
-```
+```text
 Enter password: 
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 3127
@@ -125,11 +130,11 @@ Database changed
 mysql> 
 ```
 
-## 1. First step - create the app
+## First step - create the app
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">dev</code> ```npx typeorm -v ```
+(dev) $ `npx typeorm -v`
 
-```
+```text
 Need to install the following packages:
 typeorm@0.3.25
 Ok to proceed? (y) y
@@ -137,19 +142,19 @@ Ok to proceed? (y) y
 0.3.25
 ```
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">dev</code> ```npx typeorm init --express --name typeorm-api --database mysql```
+(dev) $ `npx typeorm init --express --name typeorm-api --database mysql`
 
-```
+```text
 Project created inside /home/jlm/dev/typeorm-api directory.
 Please wait, installing dependencies...
 Done! Start playing with a new project!
 ```
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">dev</code> ```cd typeorm-api```
+(dev) $ `cd typeorm-api`
 
 ... and inside the project, the autogenerated README.md says:
 
-```
+```text
 # Awesome Project Build with TypeORM
 
 Steps to run this project:
@@ -161,10 +166,9 @@ Steps to run this project:
 
 Let's give it a go - to ensure that everything is as expected
 
+(typeorm-api) $ `npm i`
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">typeorm-api</code> ```npm i ```
-
-```
+```text
 up to date, audited 191 packages in 843ms
 
 45 packages are looking for funding
@@ -173,9 +177,9 @@ up to date, audited 191 packages in 843ms
 found 0 vulnerabilities
 ```
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">typeorm-api</code> ```npm start ```
+(typeorm-api) $ `npm start`
 
-```
+```bash
 > typeorm-api@0.0.1 start
 > ts-node src/index.ts
 
@@ -183,7 +187,8 @@ Express server has started on port 3000. Open http://localhost:3000/users to see
 ```
 
 Entering the URL in a browser - returns this output:
-```
+
+```json
 [
     {
         "id": 1,
@@ -206,36 +211,39 @@ Great, ready to move on!
 
 First, create repository in github interactively, then add local project to github
 
-```
-$ git init
-$ git add .
-$ git commit -m "initial commit" -m "npx typeorm init --express --name typeorm-api --database mysql"
-$ git branch -M main
-$ git remote add origin https://github.com/<MyProfile>/typeorm-api.git
-$ git push -u origin main
+```bash
+git init
+git add .
+git commit -m "initial commit" -m "npx typeorm init --express --name typeorm-api --database mysql"
+git branch -M main
+git remote add origin https://github.com/<MyProfile>/typeorm-api.git
+git push -u origin main
 ```
 
 ### Project adjustments
 
 #### Rename `index.ts` to `server.ts`
-<code style="color : greenyellow">➜</code> <code style="color : aqua">typeorm-api</code> ```mv src/index.ts src/server.ts```
+
+(typeorm-api) $ `mv src/index.ts src/server.ts`
 
 ... and make package.json reflect that change
-```
+
+```json
 {
-   ...
+    // :
    "scripts": {
       "start": "ts-node src/server.ts",
       "typeorm": "typeorm-ts-node-commonjs"
    },
-   ...
+    // :
 }
 ```
 
 #### Collect ORM releated stuff in `src/orm/`
 
 These things get bloated quickly. Looking forward, the aim is a folder structure with room for growth (focusing on ORM right now) - going in this direction
-```
+
+```text
 src/
     controllers/
     graphql/
@@ -251,29 +259,257 @@ src/
 
 Rearranging the structure ...
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">typeorm-api</code> ```mkdir src/orm```
+(typeorm-api) $ `mkdir src/orm`
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">typeorm-api</code> ```mv src/entity src/orm/entity```
+(typeorm-api) $ `mv src/entity src/orm/entity`
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">typeorm-api</code> ```mv src/migration src/orm/migration```
+(typeorm-api) $ `mv src/migration src/orm/migration`
 
-<code style="color : greenyellow">➜</code> <code style="color : aqua">typeorm-api</code> ```mv src/data-source.ts src/orm/datasource.ts```
+(typeorm-api) $ `mv src/data-source.ts src/orm/datasource.ts`
 
 #### Fix the imports after rearrangement
 
 `server.ts`
-```
- :
+
+```TypeScript
+//  :
 import { AppDataSource } from "./orm/datasource"
 import { User } from "./orm/entity/User"
- :
+//  :
 ```
 
 `UserController.ts`
-```
- :
+
+```TypeScript
+//  :
 import { AppDataSource } from "../orm/datasource"
 import { User } from "../orm/entity/User"
- :
+//  :
 ```
 
+## Adding TypeORM migration to the project
+
+Moving the project into production requires ability to maintain data while upgrading DB layout - this is what [TypeORM Migrations](https://typeorm.io/#/migrations) takes care of.
+
+**Notice (below)** synchronize is allowed only in development - hereafter, all data-model changes rely purely on TypeORM migrations (smoothly integrated into Change-/Release Mangement). It is debatable if synchronize should be allowed at all - one could argue the benefits of controlling database changes with explicit `npm typeorm migration:run` commands - both options are available.
+
+Let's assume a project promotion strategy like this (just one of many possibilities):
+
+* .env.development - allows building new TypeORM Entities (database models) which is synchronized into the database
+* .env.test - requires migrations (synchronize = false)
+* .env.staginglocal - requires migrations (synchronize = false)
+* .env.staging - requires migrations (synchronize = false)
+* .env.prod - requires migrations (synchronize = false)
+
+Splitting the environment settings into separate env-files allows customizing settings (DB login), compiler options (TypeScript sourceMap) etc.
+
+Environment specific commands are then added to `package.json`.
+
+To organize the project workflow/lifecycle and keep track of build/deployment strategy, these files are of course vital - but must be kept away from version control (like github) due to security risks.
+
+### Adding environment settings
+
+(installing dotenvx - [NPM guidelines](https://dotenvx.com/docs/package-managers/npm))
+
+**The strategy is this:**
+
+* Use dotenvx to inject environment specific settings into `src/orm/datasource.ts`
+* Store environment specific settings in env-files
+* Add env-specific script comands in `package.json` to handle the complexity
+
+### How it works
+
+* When you run `dotenvx run -f .env.development -- ts-node src/server.ts`, the current working directory is `projectRoot/`.
+
+* `ts-node` executes `src/server.ts`, which imports `src/orm/datasource.ts`.
+
+* AppDataSource receives the string `./src/orm/entity/*.ts` from `process.env.TYPEORM_ENTITIES`.
+
+* TypeORM's internal glob resolver then correctly interprets this path relative to the current working directory (`projectRoot/`) and finds the .ts entity files.
+git
+
+#### Use dotenvx to inject environment specific settings into `src/orm/datasource.ts`
+
+(typeorm-api) $ `npm install @dotenvx/dotenvx --save`
+
+```text
+added 23 packages, and audited 214 packages in 2s
+
+54 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+```
+
+#### Store environment specific settings in env-files
+
+Two .env-files are added in the project root.
+
+Yeah, I know  ;-) - sharing these settings is a security breach, don't tell anyone.
+
+`.env.development`
+
+```text
+TYPEORM_SCHEMA = sandbox
+TYPEORM_CONNECTION = mysql
+TYPEORM_HOST = localhost
+TYPEORM_PORT = 3306
+TYPEORM_USERNAME = test
+TYPEORM_PASSWORD = test
+TYPEORM_DATABASE = dev
+
+TYPEORM_SYNCHRONIZE = false
+TYPEORM_LOGGING = all
+
+TYPEORM_ENTITIES = ./src/orm/entity/**/*.ts
+TYPEORM_MIGRATIONS = ./src/orm/migration/**/*.ts
+TYPEORM_SUBSCRIBERS = ./src/orm/subscriber/**/*.ts
+```
+
+`.env.test`
+
+```text
+TYPEORM_SCHEMA = sandbox
+TYPEORM_CONNECTION = mysql
+TYPEORM_HOST = localhost
+TYPEORM_PORT = 3306
+TYPEORM_USERNAME = test
+TYPEORM_PASSWORD = test
+TYPEORM_DATABASE = test
+
+TYPEORM_SYNCHRONIZE = false
+TYPEORM_LOGGING = all
+
+TYPEORM_ENTITIES = ./src/orm/entity/**/*.ts
+TYPEORM_MIGRATIONS = ./src/orm/migration/**/*.ts
+TYPEORM_SUBSCRIBERS = ./src/orm/subscriber/**/*.ts
+```
+
+#### Add env-specific script comands in `package.json` to handle the complexity
+
+`package.json`
+
+```json
+{
+    // :
+    "scripts": {
+        "-- Dev ------": "Migration-files are created here",
+        "dev:start": "dotenvx run -f .env.development -- ts-node src/server.ts",
+        "dev:typeorm": "dotenvx run -f .env.development -- typeorm-ts-node-commonjs",
+        "dev:migration:run": "dotenvx run -f .env.development -- typeorm-ts-node-commonjs migration:run -d src/orm/datasource.ts",
+        "dev:migration:revert": "dotenvx run -f .env.development -- typeorm-ts-node-commonjs migration:revert -d src/orm/datasource.ts",
+
+        "-- Test -----": "using migration here (this part is tested too)",
+        "test:start": "dotenvx run -f .env.test -- ts-node src/server.ts",
+        "test:typeorm": "dotenvx run -f .env.test -- typeorm-ts-node-commonjs",
+        "test:migration:run": "dotenvx run -f .env.test -- typeorm-ts-node-commonjs migration:run -d src/orm/datasource.ts",
+        "test:migration:revert": "dotenvx run -f .env.test -- typeorm-ts-node-commonjs migration:revert -d src/orm/datasource.ts"
+    },
+    // :
+}
+```
+
+(typeorm-api) $ `npm run dev:typeorm -- migration:generate src/orm/migration/Init -d src/orm/datasource.ts`
+
+```text
+> typeorm-api@0.0.1 dev:typeorm
+> dotenvx run -f .env.development -- typeorm-ts-node-commonjs migration:generate src/orm/migration/Init -d src/orm/datasource.ts
+
+[dotenvx@1.45.2] injecting env (13) from .env.development
+query: SELECT VERSION() AS `version`
+query: SELECT DATABASE() AS `db_name`
+query: SELECT `TABLE_SCHEMA`, `TABLE_NAME`, `TABLE_COMMENT` FROM `INFORMATION_SCHEMA`.`TABLES` WHERE `TABLE_SCHEMA` = 'dev' AND `TABLE_NAME` = 'user'
+query: SELECT * FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA` = 'dev' AND `TABLE_NAME` = 'typeorm_metadata'
+Migration /home/jlm/dev/typeorm-api/src/orm/migration/1751924668503-Init.ts has been generated successfully.
+```
+
+(typeorm-api) $ `npm run dev:migration:run`
+
+```text
+> typeorm-api@0.0.1 dev:migration:run
+> dotenvx run -f .env.development -- typeorm-ts-node-commonjs migration:run -d src/orm/datasource.ts
+
+[dotenvx@1.45.2] injecting env (13) from .env.development
+query: SELECT VERSION() AS `version`
+query: SELECT * FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA` = 'dev' AND `TABLE_NAME` = 'migrations'
+query: CREATE TABLE `migrations` (`id` int NOT NULL AUTO_INCREMENT, `timestamp` bigint NOT NULL, `name` varchar(255) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB
+query: SELECT * FROM `dev`.`migrations` `migrations` ORDER BY `id` DESC
+0 migrations are already loaded in the database.
+1 migrations were found in the source code.
+1 migrations are new migrations must be executed.
+query: START TRANSACTION
+query: CREATE TABLE `user` (`id` int NOT NULL AUTO_INCREMENT, `firstName` varchar(255) NOT NULL, `lastName` varchar(255) NOT NULL, `age` int NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB
+query: INSERT INTO `dev`.`migrations`(`timestamp`, `name`) VALUES (?, ?) -- PARAMETERS: [1751924668503,"Init1751924668503"]
+Migration Init1751924668503 has been executed successfully.
+query: COMMIT
+```
+
+(typeorm-api) $ `npm run dev:migration:revert`
+
+```text
+> typeorm-api@0.0.1 dev:migration:revert
+> dotenvx run -f .env.development -- typeorm-ts-node-commonjs migration:revert -d src/orm/datasource.ts
+
+[dotenvx@1.45.2] injecting env (13) from .env.development
+query: SELECT VERSION() AS `version`
+query: SELECT * FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA` = 'dev' AND `TABLE_NAME` = 'migrations'
+query: SELECT * FROM `dev`.`migrations` `migrations` ORDER BY `id` DESC
+1 migrations are already loaded in the database.
+Init1751924668503 is the last executed migration. It was executed on Mon Jul 07 2025 23:44:28 GMT+0200 (Central European Summer Time).
+Now reverting it...
+query: START TRANSACTION
+query: DROP TABLE `user`
+query: DELETE FROM `dev`.`migrations` WHERE `timestamp` = ? AND `name` = ? -- PARAMETERS: [1751924668503,"Init1751924668503"]
+Migration Init1751924668503 has been reverted successfully.
+query: COMMIT
+```
+
+OK, `npm run dev:migration:revert` works - but the initial migration is needed to run the server.
+
+Before starting the server, migration is executed once more.
+
+(typeorm-api) $ `npm run dev:migration:run`
+
+(typeorm-api) $ `npm run dev:start`
+
+```text
+> typeorm-api@0.0.1 dev:start
+> dotenvx run -f .env.development -- ts-node src/server.ts
+
+[dotenvx@1.45.2] injecting env (13) from .env.development
+--- Attempting to initialize AppDataSource ---
+TYPEORM_ENTITIES: ./src/orm/entity/**/*.ts
+TYPEORM_MIGRATIONS: ./src/orm/migration/**/*.ts
+TYPEORM_SUBSCRIBERS: ./src/orm/subscriber/**/*.ts
+--- AppDataSource initialized ---
+query: SELECT VERSION() AS `version`
+info: No classes were found using the provided glob pattern:  "./src/orm/subscriber/**/*.ts"
+info: All classes found using provided glob pattern "./src/orm/entity/**/*.ts" : "src/orm/entity/User.ts"
+info: All classes found using provided glob pattern "./src/orm/migration/**/*.ts" : "src/orm/migration/1751924668503-Init.ts"
+query: START TRANSACTION
+query: INSERT INTO `user`(`id`, `firstName`, `lastName`, `age`) VALUES (DEFAULT, ?, ?, ?) -- PARAMETERS: ["Timber","Saw",27]
+query: COMMIT
+query: START TRANSACTION
+query: INSERT INTO `user`(`id`, `firstName`, `lastName`, `age`) VALUES (DEFAULT, ?, ?, ?) -- PARAMETERS: ["Phantom","Assassin",24]
+query: COMMIT
+Express server has started on port 3000. Open http://localhost:3000/users to see results
+```
+
+And the browser output from <http://localhost:3000/users> is:
+
+```json
+[
+    {
+        "id": 1,
+        "firstName": "Timber",
+        "lastName": "Saw",
+        "age": 27
+    },
+    {
+        "id": 2,
+        "firstName": "Phantom",
+        "lastName": "Assassin",
+        "age": 24
+    }
+]
+```

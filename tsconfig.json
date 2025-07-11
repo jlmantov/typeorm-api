@@ -1,14 +1,24 @@
 {
    "compilerOptions": {
-      "lib": [
-         "es2021"
-      ],
-      "target": "es2021",
+      "lib": ["es2021", "es6", "es5"],
+      "target": "es2021", // Or es2022, es2020 - aligns with modern Node.js
       "module": "commonjs",
-      "moduleResolution": "node",
+      "moduleResolution": "node", // Ensures Node.js-style module resolution
       "outDir": "./build",
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
-      "sourceMap": true
-   }
-}
+      "sourceMap": true,
+      "allowJs": true,
+      "strictPropertyInitialization": false,
+      "rootDir": "./src", // TS source files root
+      "esModuleInterop": true,
+      "skipLibCheck": true, // Often useful to avoid errors from node_modules d.ts files
+      "forceConsistentCasingInFileNames": true, // Good practice
+   },
+   "include": [
+     "src/**/*.ts" // Include all TypeScript files in src directory
+   ],
+   "exclude": [
+     "node_modules" // Exclude node_modules
+   ]
+ }
